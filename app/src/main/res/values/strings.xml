@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wilddog Login Demo</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_logout">Logout</string>
+
+    <string name="login_with_password">Login with Password</string>
+    <string name="login_anonymously">Login Anonymously</string>
+    <string name="login_with_weibo">Login with Weibo</string>
+    <string name="login_with_qq">Login with QQ</string>
+    <!-- WeiBo -->
+    <string name="weibosdk_demo_step_to_obtain_code">第一步：获取 Code</string>
+    <string name="weibosdk_demo_step_to_obtain_token">第二步：获取 Token</string>
+    <string name="weibosdk_demo_step_to_obtain_wilddog">第三步：集成到Wilddog</string>
+    <string name="weibosdk_demo_code_text_hint">第一步获取到的 Code：</string>
+    <string name="weibosdk_demo_token_text_hint">第二步获取到的 Token：</string>
+    <string name="weibosdk_demo_wilddog_text_hint">第三步集成Wilddog登录：</string>
+    <string name="weibosdk_demo_token_to_string_format_1">Token：%1$s \n有效期：%2$s</string>
+    <string name="com_sina_weibo_sdk_login_with_weibo_account">用微博登录</string>
+    <string name="com_sina_weibo_sdk_login">登录</string>
+    <string name="com_sina_weibo_sdk_logout">注销</string>
+    <!-- qq -->
+    <string name="qq_login">登录</string>
+    <string name="qq_logout">退出当前账号</string>
+
+</resources>
