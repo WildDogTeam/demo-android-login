@@ -1,39 +1,42 @@
-# demo-android-login ¡ª Wilddog ¿ªÔ´µÇÂ¼Ó¦ÓÃ
+# demo-android-login â€• Wilddog å¼€æºç™»å½•åº”ç”¨
 
  This demo Android app demonstrates authenticating with Wilddog Login for weibo, qq, email &amp; password, and anonymous.
 
-## ±¾µØÔËĞĞ
-Ê×ÏÈÈ·ÈÏ±¾»úÒÑ¾­°²×° [Android] (http://developer.android.com/index.html)ÔËĞĞ»·¾³ºÍ Andriod Studio ¿ª·¢»·¾³ £¬È»ºóÖ´ĞĞÏÂÁĞÖ¸Áî£º
+## æœ¬åœ°è¿è¡Œ
+é¦–å…ˆç¡®è®¤æœ¬æœºå·²ç»å®‰è£… [Android] (http://developer.android.com/index.html)è¿è¡Œç¯å¢ƒå’Œ Andriod Studio å¼€å‘ç¯å¢ƒ ï¼Œç„¶åæ‰§è¡Œä¸‹åˆ—æŒ‡ä»¤ï¼š
 
 ```
 git clone git@github.com:WildDogTeam/demo-android-login.git
 cd  demo-android-login
 ```
-#### °´ÕÕÏÂÁĞÎÄ¼şÖĞµÄ±ê×¢ËµÃ÷Ìæ»»Ïà¹Ø²ÎÊı:
+#### æŒ‰ç…§ä¸‹åˆ—æ–‡ä»¶ä¸­çš„æ ‡æ³¨è¯´æ˜æ›¿æ¢ç›¸å…³å‚æ•°:
 0. [res/values/keys.xml](/app/src/main/res/values/keys.xml)
 0. [AndroidManifest.xml](/app/src/main/AndroidManifest.xml)
 0. [MainActivity.java](/app/src/main/java/com/wilddog/samples/logindemo/MainActivity.java)
 
-## Ö§³Ö
-Èç¹ûÔÚÊ¹ÓÃ¹ı³ÌÖĞÓĞÈÎºÎÎÊÌâ£¬ÇëÌá [issue](https://github.com/WildDogTeam/demo-android-login/issues) £¬ÎÒ»áÔÚ Github ÉÏ¸øÓè°ïÖú¡£
+## æ›´å¤šç¤ºä¾‹
 
-## Ïà¹ØÎÄµµ
+è¿™é‡Œåˆ†ç±»æ±‡æ€»äº† WildDogå¹³å°ä¸Šçš„ç¤ºä¾‹ç¨‹åºå’Œå¼€æºåº”ç”¨ï¼Œã€€é“¾æ¥åœ°å€ï¼š[https://github.com/WildDogTeam/wilddog-demos](https://github.com/WildDogTeam/wilddog-demos)
 
-* [Wilddog ¸ÅÀÀ](https://z.wilddog.com/overview/guide)
-* [Android SDK¿ìËÙÈëÃÅ](https://z.wilddog.com/android/quickstart)
-* [Android SDK ¿ª·¢Ïòµ¼](https://z.wilddog.com/android/guide/1)
+## æ”¯æŒ
+å¦‚æœåœ¨ä½¿ç”¨è¿‡ç¨‹ä¸­æœ‰ä»»ä½•é—®é¢˜ï¼Œè¯·æ [issue](https://github.com/WildDogTeam/demo-android-login/issues) ï¼Œæˆ‘ä¼šåœ¨ Github ä¸Šç»™äºˆå¸®åŠ©ã€‚
+
+## ç›¸å…³æ–‡æ¡£
+
+* [Wilddog æ¦‚è§ˆ](https://z.wilddog.com/overview/introduction)
+* [Android SDKå¿«é€Ÿå…¥é—¨](https://z.wilddog.com/android/quickstart)
 * [Android SDK API](https://z.wilddog.com/android/api)
-* [ÏÂÔØÒ³Ãæ](https://www.wilddog.com/download/)
-* [Wilddog FAQ](https://z.wilddog.com/faq/qa)
+* [ä¸‹è½½é¡µé¢](https://www.wilddog.com/download/)
+* [Wilddog FAQ](https://z.wilddog.com/questions)
 * [Android Download](http://developer.android.com/sdk/index.html)
-* [ÌÚÑ¶¿ª·ÅÆ½Ì¨](http://open.qq.com/)
-* [ĞÂÀËÎ¢²©¿ª·ÅÆ½Ì¨](http://open.weibo.com/)
+* [è…¾è®¯å¼€æ”¾å¹³å°](http://open.qq.com/)
+* [æ–°æµªå¾®åšå¼€æ”¾å¹³å°](http://open.weibo.com/)
 
 ## License
 MIT
 http://wilddog.mit-license.org/
 
-## ¸ĞĞ» Thanks
+## æ„Ÿè°¢ Thanks
 
 demo-android-login is built on and with the aid of several  projects. We would like to thank the following projects for helping us achieve our goals:
 
