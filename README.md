@@ -12,7 +12,7 @@ cd  demo-android-login
 #### 按照下列文件中的标注说明替换相关参数:
 0. [res/values/keys.xml](/app/src/main/res/values/keys.xml)
 0. [AndroidManifest.xml](/app/src/main/AndroidManifest.xml)
-0. [MainActivity.java](/app/src/main/java/com/wilddog/samples/logindemo/MainActivity.java)
+
 
 ## 更多示例
 
@@ -23,9 +23,9 @@ cd  demo-android-login
 
 ## 相关文档
 
-* [Wilddog 概览](https://z.wilddog.com/overview/introduction)
-* [Android SDK快速入门](https://z.wilddog.com/android/quickstart)
-* [Android SDK API](https://z.wilddog.com/android/api)
+* [Wilddog 概览](https://docs.wilddog.com/overview/index.html)
+* [Android SDK快速入门](https://docs.wilddog.com/quickstart/sync/android.html)
+* [Android SDK API](https://docs.wilddog.com/api/sync/android.html)
 * [下载页面](https://www.wilddog.com/download/)
 * [Wilddog FAQ](https://z.wilddog.com/questions)
 * [Android Download](http://developer.android.com/sdk/index.html)
