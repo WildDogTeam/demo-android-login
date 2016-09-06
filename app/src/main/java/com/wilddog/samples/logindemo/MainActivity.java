@@ -12,9 +12,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.wilddog.client.AuthData;
-import com.wilddog.client.Wilddog;
-import com.wilddog.client.WilddogError;
+
+import com.wilddog.wilddogauth.WilddogAuth;
+import com.wilddog.wilddogauth.core.Task;
+import com.wilddog.wilddogauth.core.credentialandprovider.AuthCredential;
+import com.wilddog.wilddogauth.core.credentialandprovider.WeiXinAuthCredential;
+import com.wilddog.wilddogauth.core.credentialandprovider.WeiXinAuthProvider;
+import com.wilddog.wilddogauth.core.listener.OnCompleteListener;
+import com.wilddog.wilddogauth.core.result.AuthResult;
+import com.wilddog.wilddogauth.model.WilddogUser;
 
 import java.util.Map;
 
@@ -42,14 +48,14 @@ public class MainActivity extends ActionBarActivity {
     /* A dialog that is presented until the Wilddog authentication finished. */
     private ProgressDialog mAuthProgressDialog;
 
-    /* A reference to the Wilddog */
-    private Wilddog mWilddogRef;
+    /* A reference to the WilddogAuth */
+    private WilddogAuth mWilddogAuth;
 
     /* Data from the authenticated user */
-    private AuthData mAuthData;
+    private WilddogUser mUser;
     
     /* Listener for Wilddog session changes */
-    private Wilddog.AuthStateListener mAuthStateListener;
+    private WilddogAuth.AuthStateListener mAuthStateListener;
 
     /* *************************************
      *              PASSWORD               *
@@ -77,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         /* Create the Wilddog ref that is used for all authentication with Wilddog */
-        mWilddogRef = new Wilddog(getResources().getString(R.string.wilddog_url));
+        mWilddogAuth = WilddogAuth.getInstance(getResources().getString(R.string.wilddog_url),this);
 
         /* *************************************
          *               PASSWORD              *
@@ -142,29 +148,34 @@ public class MainActivity extends ActionBarActivity {
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
 
-        mAuthStateListener = new Wilddog.AuthStateListener() {
+        mAuthStateListener = new WilddogAuth.AuthStateListener() {
             @Override
-            public void onAuthStateChanged(AuthData authData) {
+            public void onAuthStateChanged(WilddogAuth wilddogAuth) {
                 mAuthProgressDialog.hide();
-                setAuthenticatedUser(authData);
+                WilddogUser wilddogUser=wilddogAuth.getCurrentUser();
+                if(wilddogUser!=null) {
+                    setAuthenticatedUser(wilddogUser);
+                }else {
+
+                }
             }
         };
         /* Check if the user is authenticated with Wilddog already. If this is the case we can set the authenticated
          * user and hide hide any login buttons */
-        mWilddogRef.addAuthStateListener(mAuthStateListener);
+        mWilddogAuth.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         // if changing configurations, stop tracking wilddog session.
-        mWilddogRef.removeAuthStateListener(mAuthStateListener);
+        mWilddogAuth.removeAuthStateListener(mAuthStateListener);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         /* If a user is currently authenticated, display a logout menu */
-        if (this.mAuthData != null) {
+        if (this.mUser != null) {
             getMenuInflater().inflate(R.menu.main, menu);
             return true;
         } else {
@@ -186,9 +197,9 @@ public class MainActivity extends ActionBarActivity {
      * Unauthenticate from Wilddog and from providers where necessary.
      */
     private void logout() {
-        if (this.mAuthData != null) {
+        if (this.mUser != null) {
             /* logout of Wilddog */
-            mWilddogRef.unauth();
+            mWilddogAuth.signOut();
             /* Update authenticated user and show login buttons */
             setAuthenticatedUser(null);
         }
@@ -197,8 +208,8 @@ public class MainActivity extends ActionBarActivity {
     /**
      * Once a user is logged in, take the mAuthData provided from Wilddog and "use" it.
      */
-    private void setAuthenticatedUser(AuthData authData) {
-        if (authData != null) {
+    private void setAuthenticatedUser(WilddogUser wilddogUser) {
+        if (wilddogUser != null) {
             /* Hide all the login buttons */
             mPasswordLoginButton.setVisibility(View.GONE);
             mAnonymousLoginButton.setVisibility(View.GONE);
@@ -207,17 +218,18 @@ public class MainActivity extends ActionBarActivity {
             mLoggedInStatusTextView.setVisibility(View.VISIBLE);
             /* show a provider specific status text */
             String name = null;
-            if (authData.getProvider().equals("weibo")
-                    || authData.getProvider().equals("qq")) {
-                name = (String) authData.getProviderData().get("displayName");
-            } else if (authData.getProvider().equals("anonymous")
-                    || authData.getProvider().equals("password")) {
-                name = authData.getUid();
+           String providerId=  wilddogUser.getProviderId();
+            if (providerId.equals("weibo")
+                    || providerId.equals("qq")) {
+                name =  wilddogUser.getDisplayName();
+            } else if (providerId.equals("anonymous")
+                    || providerId.equals("password")) {
+                name = wilddogUser.getUid();
             } else {
-                Log.e(TAG, "Invalid provider: " + authData.getProvider());
+                Log.e(TAG, "Invalid provider: " + wilddogUser.getProviderId());
             }
             if (name != null) {
-                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
+                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + wilddogUser.getProviderId() + ")");
             }
         } else {
             /* No authenticated user show all the login buttons 登出后再次显示按钮*/
@@ -228,7 +240,7 @@ public class MainActivity extends ActionBarActivity {
             mQQButton.setVisibility(View.VISIBLE);
             mLoggedInStatusTextView.setVisibility(View.GONE);
         }
-        this.mAuthData = authData;
+        this.mUser = wilddogUser;
         /* invalidate options menu to hide/show the logout button */
         supportInvalidateOptionsMenu();
     }
@@ -245,30 +257,7 @@ public class MainActivity extends ActionBarActivity {
                 .show();
     }
 
-    /**
-     * Utility class for authentication results
-     */
-    private class AuthResultHandler implements Wilddog.AuthResultHandler {
 
-        private final String provider;
-
-        public AuthResultHandler(String provider) {
-            this.provider = provider;
-        }
-
-        @Override
-        public void onAuthenticated(AuthData authData) {
-            mAuthProgressDialog.hide();
-            Log.i(TAG, provider + " auth successful");
-            setAuthenticatedUser(authData);
-        }
-
-        @Override
-        public void onAuthenticationError(WilddogError wilddogError) {
-            mAuthProgressDialog.hide();
-            showErrorDialog(wilddogError.toString());
-        }
-    }
 
     /* ************************************
      *              PASSWORD              *
@@ -277,7 +266,13 @@ public class MainActivity extends ActionBarActivity {
     public void loginWithPassword() {
         mAuthProgressDialog.show();
 //        TODO:  Replace into your account password
-        mWilddogRef.authWithPassword("email@test.com", "12345678", new AuthResultHandler("password"));
+
+       mWilddogAuth.signInWithEmailAndPassword("email@test.com", "12345678").addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(Task<AuthResult> task) {
+                processTask(task);
+            }
+        });
     }
 
     /* ************************************
@@ -286,7 +281,28 @@ public class MainActivity extends ActionBarActivity {
      */
     private void loginAnonymously() {
         mAuthProgressDialog.show();
-        mWilddogRef.authAnonymously(new AuthResultHandler("anonymous"));
+        mWilddogAuth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(Task<AuthResult> task) {
+               processTask(task);
+            }
+        });
 
     }
+
+    /*
+    * 处理授权登录成功后的结果
+    * */
+
+    private void processTask(Task<AuthResult> task){
+        if(task.isSuccessful()){
+            mAuthProgressDialog.hide();
+            Log.i(TAG, task.getResult().getWilddogUser().getProviderId() + " auth successful");
+            setAuthenticatedUser(task.getResult().getWilddogUser());
+        }else {
+            mAuthProgressDialog.hide();
+            showErrorDialog(task.getException().toString());
+        }
+    }
+
 }

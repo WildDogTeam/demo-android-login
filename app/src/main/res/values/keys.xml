@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
 <resources>
-
-    <string name="wilddog_url">https://<your-app_id>.wilddogio.com</string>
-    <!-- weibo -->
-    <string name="APP_KEY"><your-weibo-APP_KEY></string>
+&lt;!&ndash;<your-app_id>&ndash;&gt;
+    <string name="wilddog_url"><your-app_id></string>
+    &lt;!&ndash; weibo   &ndash;&gt;
+    <string name="APP_KEY"><your-weibo-APP_KEY></your-weibo-APP_KEY></string>
     <string name="WEIBO_DEMO_APP_SECRET"><your-weibo-WEIBO_DEMO_APP_SECRET></string>
-    <!-- qq -->
+    &lt;!&ndash; qq   <your-qq-APP_ID>&ndash;&gt;
     <string name="APP_ID"><your-qq-APP_ID></string>
+</resources>-->
+<resources>
+    <!--<your-app_id>-->
+    <!--<string name="wilddog_url">https://testinmyserver.wilddogio.com</string>-->
+    <string name="wilddog_url">testinmyserver</string>
+    <!-- weibo   <your-weibo-APP_KEY> <your-weibo-WEIBO_DEMO_APP_SECRET>-->
+    <string name="APP_KEY">700122950</string>
+    <string name="WEIBO_DEMO_APP_SECRET">c2c5d7731459051011288d64b698b046</string>
+    <!-- qq   <your-qq-APP_ID>-->
+    <string name="APP_ID">1104855396</string>
 </resources>

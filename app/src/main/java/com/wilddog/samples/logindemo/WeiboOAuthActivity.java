@@ -24,9 +24,15 @@ import com.sina.weibo.sdk.net.AsyncWeiboRunner;
 import com.sina.weibo.sdk.net.RequestListener;
 import com.sina.weibo.sdk.utils.LogUtil;
 import com.sina.weibo.sdk.utils.UIUtils;
-import com.wilddog.client.AuthData;
-import com.wilddog.client.Wilddog;
-import com.wilddog.client.WilddogError;
+
+import com.wilddog.wilddogauth.WilddogAuth;
+import com.wilddog.wilddogauth.core.Task;
+import com.wilddog.wilddogauth.core.credentialandprovider.AuthCredential;
+import com.wilddog.wilddogauth.core.credentialandprovider.WeiboAuthCredential;
+import com.wilddog.wilddogauth.core.credentialandprovider.WeiboAuthProvider;
+import com.wilddog.wilddogauth.core.listener.OnCompleteListener;
+import com.wilddog.wilddogauth.core.result.AuthResult;
+import com.wilddog.wilddogauth.model.WilddogUser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -60,8 +66,8 @@ public class WeiboOAuthActivity extends Activity {
 
     private static final String TAG = "WeiboOAuthActivity";
 
-    /* A reference to the Wilddog */
-    private Wilddog mWilddogRef;
+    /* A reference to the WilddogAuth */
+    private WilddogAuth mWilddogAuth;
 
     /** 注意：SsoHandler 仅当 SDK 支持 SSO 时有效 */
     private SsoHandler mSsoHandler;
@@ -86,7 +92,7 @@ public class WeiboOAuthActivity extends Activity {
      * 建议使用默认回调页：https://api.weibo.com/oauth2/default.html
      * </p>
      */
-    private  String REDIRECT_URL = "https://api.weibo.com/oauth2/default.html" ;
+    private  String REDIRECT_URL = "https://auth.wilddog.com" ;
 
     /**
      * Scope 是 OAuth2.0 授权机制中 authorize 接口的一个参数。通过 Scope，平台将开放更多的微博
@@ -118,7 +124,7 @@ public class WeiboOAuthActivity extends Activity {
         setContentView(R.layout.activity_weibo);
 
         /* Create the Wilddog ref that is used for all authentication with Wilddog */
-        mWilddogRef = new Wilddog(getResources().getString(R.string.wilddog_url));
+        mWilddogAuth = WilddogAuth.getInstance(getResources().getString(R.string.wilddog_url),this);
 
         APP_KEY = getResources().getString(R.string.APP_KEY);
         WEIBO_DEMO_APP_SECRET = getResources().getString(R.string.WEIBO_DEMO_APP_SECRET);
@@ -150,7 +156,7 @@ public class WeiboOAuthActivity extends Activity {
                 fetchTokenAsync1();
             }
         });
-        mWilddogRef.unauth();
+        mWilddogAuth.signOut();
     }
 
 
@@ -290,26 +296,27 @@ public class WeiboOAuthActivity extends Activity {
     }
     public void fetchTokenAsync1() {
         //将token集成到用Wilddog中
-        Map<String, String> options = new HashMap<String, String>();
-
-        options.put("access_token", mAccessToken.getToken().toString());
-
-        options.put("openId", mAccessToken.getUid());
 
 
-        mWilddogRef.authWithOAuthToken("weibo", options, new Wilddog.AuthResultHandler() {
+       String token=  mAccessToken.getToken().toString();
 
+        String uid= mAccessToken.getUid();
+
+        AuthCredential weiboAuthCredential=WeiboAuthProvider.getCredential(token,uid);
+
+        mWilddogAuth.signInWithCredential(weiboAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onAuthenticated(AuthData authData) {
-                mWilddogText.setText("Logged in as " + authData.getUid() + " (" + authData.getProvider() + ")");
-                Log.d("authData--------", authData.toString());
-            }
-
-            @Override
-            public void onAuthenticationError(WilddogError error) {
-                Log.e("error--------", error.toString());
+            public void onComplete(Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    WilddogUser wilddogUser=task.getResult().getWilddogUser();
+                    mWilddogText.setText("Logged in as " + wilddogUser.getUid() + " (" + wilddogUser.getProviderId() + ")");
+                }else {
+                    Log.e("error--------", task.getException().toString());
+                }
             }
         });
+
+
     }
 
 //    @Override

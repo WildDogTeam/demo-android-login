@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,9 +24,13 @@ import com.tencent.connect.auth.QQAuth;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
-import com.wilddog.client.AuthData;
-import com.wilddog.client.Wilddog;
-import com.wilddog.client.WilddogError;
+import com.wilddog.wilddogauth.WilddogAuth;
+import com.wilddog.wilddogauth.core.Task;
+import com.wilddog.wilddogauth.core.credentialandprovider.AuthCredential;
+import com.wilddog.wilddogauth.core.credentialandprovider.QQAuthProvider;
+import com.wilddog.wilddogauth.core.listener.OnCompleteListener;
+import com.wilddog.wilddogauth.core.result.AuthResult;
+import com.wilddog.wilddogauth.model.WilddogUser;
 
 
 import org.json.JSONException;
@@ -45,13 +50,13 @@ public class QQOAuthActivity extends Activity {
     private UserInfo mInfo;
     private Tencent mTencent;
     private TextView mWilddogText;
-    private Wilddog mWilddogRef;
+    private WilddogAuth mWilddogAuth;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "-->onCreate");
         /* Create the Wilddog ref that is used for all authentication with Wilddog */
-        mWilddogRef = new Wilddog(getResources().getString(R.string.wilddog_url));
+        mWilddogAuth = WilddogAuth.getInstance(getResources().getString(R.string.wilddog_url),this);
         setContentView(R.layout.activity_qq);
         initViews();
     }
@@ -114,7 +119,7 @@ public class QQOAuthActivity extends Activity {
         } else {
             mNewLoginButton.setTextColor(Color.BLUE);
             mNewLoginButton.setText(R.string.qq_login);
-            mWilddogRef.unauth();
+            mWilddogAuth.signOut();
         }
     }
 
@@ -165,9 +170,9 @@ public class QQOAuthActivity extends Activity {
 
         } else {
             mUserInfo.setText("");
-            mUserInfo.setVisibility(android.view.View.GONE);
-            mUserLogo.setVisibility(android.view.View.GONE);
-            mWilddogText.setVisibility(android.view.View.GONE);
+            mUserInfo.setVisibility(View.GONE);
+            mUserLogo.setVisibility(View.GONE);
+            mWilddogText.setVisibility(View.GONE);
         }
     }
 
@@ -179,7 +184,7 @@ public class QQOAuthActivity extends Activity {
                 JSONObject response = (JSONObject) msg.obj;
                 if (response.has("nickname")) {
                     try {
-                        mUserInfo.setVisibility(android.view.View.VISIBLE);
+                        mUserInfo.setVisibility(View.VISIBLE);
                         mUserInfo.setText(response.getString("nickname"));
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -188,7 +193,7 @@ public class QQOAuthActivity extends Activity {
             } else if (msg.what == 1) {
                 Bitmap bitmap = (Bitmap) msg.obj;
                 mUserLogo.setImageBitmap(bitmap);
-                mUserLogo.setVisibility(android.view.View.VISIBLE);
+                mUserLogo.setVisibility(View.VISIBLE);
             }
         }
 
@@ -237,16 +242,41 @@ public class QQOAuthActivity extends Activity {
 
             //将token集成到用Wilddog中
             mWilddogText = (TextView) findViewById(R.id.wilddog_text);
-            Map<String, String> options = new HashMap<String, String>();
+
+
+
+
+            String access_token="";
             try {
-                String access_token = (String)((JSONObject) response).get("access_token");
-                String openid = (String)((JSONObject) response).get("openid");
-                options.put("access_token", access_token);
-                options.put("openId", openid);
+                access_token= (String)((JSONObject) response).get("access_token");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            mWilddogRef.authWithOAuthToken("qq", options, new Wilddog.AuthResultHandler() {
+            if(TextUtils.isEmpty(access_token)){
+
+
+            }
+
+            AuthCredential qqAuthCredential= QQAuthProvider.getCredential(access_token);
+
+            mWilddogAuth.signInWithCredential(qqAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        WilddogUser wilddogUser=task.getResult().getWilddogUser();
+                        if(wilddogUser==null){
+                            mWilddogText.setVisibility(View.GONE);
+                        }else {
+                            mWilddogText.setText("集成Wilddog登录信息：\n"+"Logged in as " + wilddogUser.getUid() + " (" + wilddogUser.getProviderId() + ")");
+                            Log.d("authData--------", wilddogUser.toString());
+                        }
+                    }else {
+                        Log.e("error--------", task.getException().toString());
+                    }
+                }
+            });
+
+           /* mWilddogRef.authWithOAuthToken("qq", options, new Wilddog.AuthResultHandler() {
 
                 @Override
                 public void onAuthenticated(AuthData authData) {
@@ -264,7 +294,7 @@ public class QQOAuthActivity extends Activity {
                 public void onAuthenticationError(WilddogError error) {
                     Log.e("error--------", error.toString());
                 }
-            });
+            });*/
         }
 
         protected void doComplete(JSONObject values) {
