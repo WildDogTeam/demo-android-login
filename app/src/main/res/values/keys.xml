@@ -2,9 +2,13 @@
 <resources>
 <!--<your-app_id>-->
 <string name="wilddog_url"><your-app_id></string>
+
 <!-- weibo   -->
 <string name="APP_KEY"><your-weibo-APP_KEY></your-weibo-APP_KEY></string>
+
 <string name="WEIBO_DEMO_APP_SECRET"><your-weibo-WEIBO_DEMO_APP_SECRET></string>
+
 <!-- qq   <your-qq-APP_ID>-->
 <string name="APP_ID"><your-qq-APP_ID></string>
+
 </resources>

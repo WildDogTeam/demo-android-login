@@ -83,7 +83,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         /* Create the Wilddog ref that is used for all authentication with Wilddog */
-        mWilddogAuth = WilddogAuth.getInstance(getResources().getString(R.string.wilddog_url),this);
+        mWilddogAuth = WilddogAuth.getInstance();
 
         /* *************************************
          *               PASSWORD              *

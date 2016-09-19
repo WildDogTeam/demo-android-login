@@ -56,7 +56,7 @@ public class QQOAuthActivity extends Activity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "-->onCreate");
         /* Create the Wilddog ref that is used for all authentication with Wilddog */
-        mWilddogAuth = WilddogAuth.getInstance(getResources().getString(R.string.wilddog_url),this);
+        mWilddogAuth = WilddogAuth.getInstance();
         setContentView(R.layout.activity_qq);
         initViews();
     }

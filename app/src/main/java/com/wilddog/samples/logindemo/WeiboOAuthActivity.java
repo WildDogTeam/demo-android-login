@@ -124,7 +124,7 @@ public class WeiboOAuthActivity extends Activity {
         setContentView(R.layout.activity_weibo);
 
         /* Create the Wilddog ref that is used for all authentication with Wilddog */
-        mWilddogAuth = WilddogAuth.getInstance(getResources().getString(R.string.wilddog_url),this);
+        mWilddogAuth = WilddogAuth.getInstance();
 
         APP_KEY = getResources().getString(R.string.APP_KEY);
         WEIBO_DEMO_APP_SECRET = getResources().getString(R.string.WEIBO_DEMO_APP_SECRET);
