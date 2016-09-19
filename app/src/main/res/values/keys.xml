@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--<your-app_id>-->
+<!--<your-app_id>  例如 https://xx.wilddogio.com-->
 <string name="wilddog_url"><your-app_id></string>
 
 <!-- weibo   -->

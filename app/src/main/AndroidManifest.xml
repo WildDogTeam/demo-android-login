@@ -48,7 +48,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- TODO: tencent + your appid 111111111  -->
-                <data android:scheme="tencent1104855396" />
+                <data android:scheme="tencent11111111" />
             </intent-filter>
         </activity>
     </application>

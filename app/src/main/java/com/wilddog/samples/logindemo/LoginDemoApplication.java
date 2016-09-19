@@ -11,7 +11,7 @@ public class LoginDemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //TODO change to your app url
-        String loginUrl=getString(R.string.APP_ID);
+        String loginUrl=getString(R.string.wilddog_url);
         WilddogOptions wilddogOptions=new WilddogOptions.Builder().setSyncUrl(loginUrl).build();
         WilddogApp wilddogApp= WilddogApp.initializeApp(this,wilddogOptions);
     }
